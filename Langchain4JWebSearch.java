@@ -11,6 +11,7 @@ import dev.langchain4j.rag.content.retriever.WebSearchContentRetriever;
 import dev.langchain4j.web.search.WebSearchEngine;
 import dev.langchain4j.web.search.google.customsearch.GoogleCustomWebSearchEngine;
 import dev.langchain4j.service.AiServices;
+import dev.langchain4j.service.SystemMessage;
 
 public class Langchain4JWebSearch {
 
@@ -42,7 +43,7 @@ public class Langchain4JWebSearch {
             .contentRetriever(contentRetriever)
             .build();
 
-        String response = website.search("interlis webservice?");
+        String response = website.search("wie mache ich einen interlis web service mit java?");
         err.println("response = " + response);
     }
 
@@ -50,6 +51,11 @@ public class Langchain4JWebSearch {
     // Systemmessage.
 
     interface SearchWebsite {
+        @SystemMessage("""
+        Provide a paragraph-long answer, not a long step by step explanation.
+
+        Die Antwort soll in Deutsch erfolgen.
+        """)
         String search(String query);
     }
     

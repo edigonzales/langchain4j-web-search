@@ -2,6 +2,7 @@
 //DEPS dev.langchain4j:langchain4j-open-ai:0.31.0 
 //DEPS dev.langchain4j:langchain4j:0.31.0 
 //DEPS dev.langchain4j:langchain4j-web-search-engine-google-custom:0.31.0
+//DEPS org.slf4j:slf4j-simple:2.0.7
 
 import static java.lang.System.*;
 
@@ -16,15 +17,10 @@ import dev.langchain4j.service.SystemMessage;
 public class Langchain4JWebSearch {
 
     public static void main(String... args) {
-        out.println("Hello World");
 
         String apiKey = System.getenv("OPENAI_API_KEY");
         
         OpenAiChatModel model = OpenAiChatModel.withApiKey(apiKey);
-
-        //String answer = model.generate("Tell me a dad joke");
-        //err.println(answer); 
-        
         
         WebSearchEngine webSearchEngine = GoogleCustomWebSearchEngine.builder()
             .apiKey(System.getenv("GOOGLE_CUSTOM_SEARCH_API_KEY"))
@@ -35,7 +31,7 @@ public class Langchain4JWebSearch {
 
         ContentRetriever contentRetriever = WebSearchContentRetriever.builder()
             .webSearchEngine(webSearchEngine)
-            .maxResults(3)
+            .maxResults(10)
             .build();
 
         SearchWebsite website = AiServices.builder(SearchWebsite.class)
@@ -52,7 +48,7 @@ public class Langchain4JWebSearch {
 
     interface SearchWebsite {
         @SystemMessage("""
-        Provide a paragraph-long answer, not a long step by step explanation.
+        Provide a paragraph-long answer. If possible show some code samples.
 
         Die Antwort soll in Deutsch erfolgen.
         """)
